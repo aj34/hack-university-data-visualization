@@ -1,8 +1,41 @@
-var dataSet = [10, 20, 15, 30, 40, 55, 30, 50, 60];
+var legislator = {
+  name: 'Ron Wyden',
+  sectors: [
+    {
+    money_from_pacs: 589360,
+    money_from_indivs: 1109475,
+    sector_name: 'Finance/Insur/RealEst'
+    },
+    {
+    money_from_pacs: 782240,
+    money_from_indivs: 479476,
+    sector_name: 'Health'
+    },
+    {
+    money_from_pacs: 184676,
+    money_from_indivs: 638566,
+    sector_name: 'Lawyers & Lobbyists'
+    },
+    {
+    money_from_pacs: 104350,
+    money_from_indivs: 71799,
+    sector_name: 'Transportation'
+    }
+  ]
+}
+
+var h = 250; // set vars for h & w
+var w = 600;
+var yScale = d3.scale.linear()
+.domain([0,900000]) // domain a little higher than max value
+.range([0,h]) // set yScale linear
+var dataSet = legislator.sectors.map(function(item){
+    return item.money_from_pacs
+  }) // use map to get a new dataset
 
 var svg = d3.select('#barChart').append('svg')
-  .attr('width', 600)
-  .attr('height', 250);
+  .attr('width', w)
+  .attr('height', h)
 
 svg.selectAll('rect') // using svg variable reference
   .data(dataSet)
@@ -13,9 +46,10 @@ svg.selectAll('rect') // using svg variable reference
     return index * 20
   })
   .attr('y', function(data) {
-    return 250 - data
+    return h - yScale(data) // using yScale on data
   })
   .attr('width', 15)
   .style('height', function(data) {
-    return data // returning data for height value; Note no px is needed with svg
+    return yScale(data) // using yScale on data
   })
+
