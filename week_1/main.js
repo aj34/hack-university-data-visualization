@@ -1,55 +1,53 @@
 var legislator = {
   name: 'Ron Wyden',
-  sectors: [
-    {
+  sectors: [{
     money_from_pacs: 589360,
     money_from_indivs: 1109475,
     sector_name: 'Finance/Insur/RealEst'
-    },
-    {
+  }, {
     money_from_pacs: 782240,
     money_from_indivs: 479476,
     sector_name: 'Health'
-    },
-    {
+  }, {
     money_from_pacs: 184676,
     money_from_indivs: 638566,
     sector_name: 'Lawyers & Lobbyists'
-    },
-    {
+  }, {
     money_from_pacs: 104350,
     money_from_indivs: 71799,
     sector_name: 'Transportation'
-    }
-  ]
+  }]
 }
-
-var h = 250; // set vars for h & w
-var w = 600;
-var yScale = d3.scale.linear()
-.domain([0,900000]) // domain a little higher than max value
-.range([0,h]) // set yScale linear
-var dataSet = legislator.sectors.map(function(item){
+var dataSet = legislator.sectors.map(function(item) {
     return item.money_from_pacs
   }) // use map to get a new dataset
 
-var svg = d3.select('#barChart').append('svg')
-  .attr('width', w)
-  .attr('height', h)
+var height = 250; // set vars for height & width
+var width = 600;
 
-svg.selectAll('rect') // using svg variable reference
+var yScale = d3.scale.linear()
+  .domain([0, 900000]) // domain manually set a little higher than max value
+  .range([0, height]) // set yScale linear
+var xScale = d3.scale.ordinal() // orders
+  .domain(dataSet)
+  .rangeBands([0, width], 0.25, 0.25); // (width of data), padding between, padding outside
+
+var svg = d3.select('#barChart').append('svg')
+  .attr('width', width)
+  .attr('height', height)
+
+svg.selectAll('rect')
   .data(dataSet)
-  .enter() // starting d3
-  .append('rect') // creating a rect this time
-  .attr('class', 'bar') // assigning class
+  .enter()
+  .append('rect')
+  .attr('class', 'bar')
   .attr('x', function(data, index) {
-    return index * 20
+    return xScale(data) // using xScale on data
   })
   .attr('y', function(data) {
-    return h - yScale(data) // using yScale on data
+    return height - yScale(data) // using yScale on data
   })
-  .attr('width', 15)
+  .attr('width', xScale.rangeBand) // width determined by xScale.rangeBand
   .style('height', function(data) {
-    return yScale(data) // using yScale on data
+    return yScale(data) // height determined by yScale
   })
-
