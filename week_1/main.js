@@ -26,11 +26,16 @@ var height = 250; // set vars for height & width
 var width = 600;
 
 var yScale = d3.scale.linear()
-  .domain([0, 900000]) // domain manually set a little higher than max value
+  .domain([0, d3.max(dataSet)*1.1]) // domain now with d3.max
   .range([0, height]) // set yScale linear
 var xScale = d3.scale.ordinal() // orders
   .domain(dataSet)
   .rangeBands([0, width], 0.25, 0.25); // (width of data), padding between, padding outside
+
+  var colorScale = d3.scale.linear() // linear - min / max
+  //.domain([0,d3.max(dataSet)]) // for data based
+  .domain([0,dataSet.length]) // for position based
+  .range(['tomato','cornflowerBlue'])
 
 var svg = d3.select('#barChart').append('svg')
   .attr('width', width)
@@ -50,4 +55,8 @@ svg.selectAll('rect')
   .attr('width', xScale.rangeBand) // width determined by xScale.rangeBand
   .style('height', function(data) {
     return yScale(data) // height determined by yScale
+  })
+  .attr('fill', function(data,i) {
+   // return colorScale(data) // for data based
+    return colorScale(i) // for position based
   })

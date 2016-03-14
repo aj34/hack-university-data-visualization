@@ -4,7 +4,6 @@ body {
 }
 .bar {
   display: inline-block;
-  fill: tomato;
 }
 #barChart {
   width: 600px;

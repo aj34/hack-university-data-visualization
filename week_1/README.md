@@ -1,27 +1,18 @@
-# Lesson 3
+# Lesson 4
 ---
-### Transforming data
+### Scaling: Part 2
 
+#### Covered methods
 ```js
-Array.map((item) => {})
+d3.max(/*...*/)
 
-Array.push()
+// using color
+d3.scale.linear() // linear : min / max
+  .domain([0,d3.max(dataSet)]) // ex for data based
+  .domain([0,dataSet.length]) // ex for position based
+  // range can be spectrum
+  .range(['tomato','cornflowerBlue'])
 
-// For in loops for objects
-for (var key in obj) {
-  if( obj.hasOwnProperty( key ) ) { // use hasOwnProperty
-    /*...*/
-  }
-}
-```
-### Scaling
-
-```js
-d3.scale.linear()
-  .domain(/*...*/)
-  .range(/*...*/)
-
-d3.scale.ordinal()
-  .domain(/*...*/)
-  .rangeBands(/*...*/)
+d3.scale.quantile() // quantile allows us to distribute based on domain
+d3.scale.quantize() // quantize allows us to distribute based on range
 ```
