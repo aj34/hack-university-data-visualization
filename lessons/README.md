@@ -1,18 +1,33 @@
-# Lesson 4
----
-### Scaling: Part 2
+# Lesson 5
 
-#### Covered methods
+--------------------------------------------------------------------------------
+
+## Scatterplots / BubbleCharts
+### Using underscore for random data
+
 ```js
-d3.max(/*...*/)
+var dataset = _.map(_.range(/* number of random data points */), function (i) {
+  return {
+    x: /* can use Math.random to generate a value here like below */,
+    y: /* Math.random() * x where x = range of the number */,
+    radius: /* can be static or random number like above */
+  };
+}); // using underscore for random data for now
+```
 
-// using color
-d3.scale.linear() // linear : min / max
-  .domain([0,d3.max(dataSet)]) // ex for data based
-  .domain([0,dataSet.length]) // ex for position based
-  // range can be spectrum
-  .range(['tomato','cornflowerBlue'])
+### Topics covered
 
-d3.scale.quantile() // quantile allows us to distribute based on domain
-d3.scale.quantize() // quantize allows us to distribute based on range
+```js
+// defining margin values
+var margin = {top: 0, right: 0, bottom: 0, left: 0};
+
+// defining width and height with margin values
+var width = 600 - margin.left - margin.right;
+var height = 250 - margin.top - margin.bottom;
+
+// appending g
+.append('g')
+
+// transforming the x,y values of circles
+.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 ```

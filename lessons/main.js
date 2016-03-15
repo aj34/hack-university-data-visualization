@@ -8,8 +8,8 @@ var dataset = _.map(_.range(25), function (i) {
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0};
 
-var width = 600 - margin.left - margin.right,
-    height = 250 - margin.top - margin.bottom;
+var width = 600 - margin.left - margin.right;
+var height = 250 - margin.top - margin.bottom;
 
 var svg = d3.select('#scatterChart').append('svg')
   .attr('width', width + margin.left + margin.right)
