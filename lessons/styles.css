@@ -2,17 +2,16 @@ body {
   padding-top: 50px;
   padding-left: 100px;
 }
+g {
+  font-family: Lato;
+  font-size: 12px;
+}
 .bar {
   display: inline-block;
 }
-/*#barChart {
-  width: 600px;
-  height: 250px;
-  background-color: #EFE;
-}*/
 #scatterChart {
   width: 600px;
-  height: 250px;
+  height: 400px;
   background-color: #EFE;
 }
 .bubble {
@@ -21,4 +20,10 @@ body {
   fill-opacity: 0.5;
   stroke: black;
   stroke-weight: 1px;
+}
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
 }
