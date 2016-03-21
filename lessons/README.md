@@ -1,33 +1,25 @@
-# Lesson 5
+# Lesson 6
+---
 
---------------------------------------------------------------------------------
-
-## Scatterplots / BubbleCharts
-### Using underscore for random data
-
-```js
-var dataset = _.map(_.range(/* number of random data points */), function (i) {
-  return {
-    x: /* can use Math.random to generate a value here like below */,
-    y: /* Math.random() * x where x = range of the number */,
-    radius: /* can be static or random number like above */
-  };
-}); // using underscore for random data for now
-```
+## Axis
 
 ### Topics covered
 
+##### d3 related
 ```js
-// defining margin values
-var margin = {top: 0, right: 0, bottom: 0, left: 0};
+// .axis() method
+d3.svg.axis()
+  .scale(/* x or y scale*/)
+  .orient(/* top bottom left or right */)
+  .ticks(/* amount of ticks in the axis as integer*/)
+  .innerTickSize(/* integer */)
+  .outerTickSize(/* integer */)
+  .tickPadding(/* integer */);
 
-// defining width and height with margin values
-var width = 600 - margin.left - margin.right;
-var height = 250 - margin.top - margin.bottom;
-
-// appending g
-.append('g')
-
-// transforming the x,y values of circles
-.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+// using .call to execute functions like yAxis
+.call(/* reference to function */);
 ```
+##### Tools covered
+1. NPM
+2. Webpack
+3. Hot Module Replacement
