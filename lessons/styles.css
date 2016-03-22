@@ -27,3 +27,8 @@ g {
   stroke-width: 1px;
   shape-rendering: crispEdges;
 }
+.highlight {
+  fill: gold;
+  fill-opacity: 0.5;
+  stroke-width: 2px;
+}
