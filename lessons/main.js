@@ -61,7 +61,7 @@ var svg = d3.select('#scatterChart').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
-  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')'); // transform the x,y value with translate
+  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');// transform the x,y value with translate
 
 var yScale = d3.scale.linear()
   .domain([0, d3.max(dataset, function(data) {
