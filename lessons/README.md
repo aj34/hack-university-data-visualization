@@ -7,7 +7,7 @@
 
 ##### d3 transitions and events related
 ```js
-// .axis() method
+// animate your visualizations
   .transition(/* start animated transition */)
   .delay(/* milliseconds */)
   .duration(/* milliseconds */)
@@ -24,6 +24,7 @@
 // handy d3 function to toggle a class
 d3.select(this).classed(/* className */, true|false);
 ```
+
 ##### d3 time formatting
 ```js
 // formatting time in d3 from available data
