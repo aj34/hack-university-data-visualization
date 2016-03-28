@@ -19,19 +19,12 @@ function update () {
             .attr('cx', function (d) {
                 return xScale(d.x);
             })
-            // .style('fill', 'orange') // you can stagger things
-            // .transition()
-            // .duration(500)
             .attr('cy', function (d) {
                 return yScale(d.y);
             })
-            // .style('fill', 'blue')
-            // .transition()
-            // .duration(500)
             .attr('r', function (d) {
                 return d.r;
             })
-            // .style('fill', 'purple');
     }
 
 var margin = {top: 20, right: 20, bottom: 60, left: 40};

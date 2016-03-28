@@ -1,25 +1,25 @@
-# Lesson 6
+# Lesson 7
 ---
 
-## Axis
+## Transitions and events
 
 ### Topics covered
 
-##### d3 related
+##### d3 & js related
 ```js
-// .axis() method
-d3.svg.axis()
-  .scale(/* x or y scale*/)
-  .orient(/* top bottom left or right */)
-  .ticks(/* amount of ticks in the axis as integer*/)
-  .innerTickSize(/* integer */)
-  .outerTickSize(/* integer */)
-  .tickPadding(/* integer */);
+// more in depth in lesson 8
+  .transition()
+  .duration()
+  .attr()
 
-// using .call to execute functions like yAxis
-.call(/* reference to function */);
+// using regular forEach, underscore or lodash to affect each datum
+function doStuff(){
+  dataset.forEach(function(datum){
+    /* changes to dataset */
+  })
+  /* returned dataset for transitions */  
+
+}
 ```
-##### Tools covered
-1. NPM
-2. Webpack
-3. Hot Module Replacement
+*Note*
+Also discussed promises and asynchronous js -- coming up next week!
