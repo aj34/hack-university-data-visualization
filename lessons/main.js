@@ -1,91 +1,108 @@
-var dataset = _.map(_.range(25), function(i) {
-  return {
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    radius: Math.random() * 20
-  };
-}); // using underscore for random data for now
+var margin = {
+  top: 20,
+  right: 50,
+  bottom: 30,
+  left: 70
+}
 
-function update () {
-        _.each(dataset, function (datum) {
-            datum.x = Math.round(Math.random() * 100);
-            datum.y = Math.round(Math.random() * 100);
-            datum.r = Math.round(5 + Math.random() * 10);
-        })
- // need to tell the chart to actually re render
-        svg.selectAll('circle')
-            .transition() //
-            .duration(500)
-            .attr('cx', function (d) {
-                return xScale(d.x);
-            })
-            .attr('cy', function (d) {
-                return yScale(d.y);
-            })
-            .attr('r', function (d) {
-                return d.r;
-            })
+var width = 800 - margin.left - margin.right;
+var height = 500 - margin.top - margin.bottom;
+
+var filerId = 931;
+
+var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + filerId + '/';
+
+// note that I changed this to d3.json to show there's no difference
+d3.json(url, function(json) {
+  var data = json;
+  var parseDate = d3.time.format('%Y-%m-%d').parse;
+  var dataSet = data.map(function(item) {
+    return {
+      date: parseDate(item.tran_date),
+      amount: +item.amount
     }
+  })
 
-var margin = {top: 20, right: 20, bottom: 60, left: 40};
+  // we did not do this in class but when using d3.extent it's handy for min/max
+  var dates = _.map(dataSet, 'date');
+  // var amounts = _.map(dataSet, 'amount'); // only necessary if we use extent
 
-var width = 600 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;
+  // defining the x and y values
+  var x = d3.time.scale() // determined through d3.time.scale function
+    .domain(d3.extent(dates)) // using the extent method on dates array
+    .range([0, width]);
+  var y = d3.scale.linear() // determined through d3.scale.linear function
+    .domain([0, d3.max(dataSet, function(d) { // we tried this in class - it works
+      return d.amount; // is there a difference though? try extent below and see
+    })])
+    // .domain(d3.extent(amounts)) // we had this in an array in class like [d3.extent...] and it should not have been
+    .range([height, 0]);
 
+  // we didn't get to this in class but this should be familiar
+  var xAxis = d3.svg.axis().scale(x)
+    .orient('bottom').ticks(6);
+  var yAxis = d3.svg.axis().scale(y)
+    .orient('left').ticks(10);
 
-var svg = d3.select('#scatterChart').append('svg')
-  .attr('width', width + margin.left + margin.right)
-  .attr('height', height + margin.top + margin.bottom)
-  .append('g')
-  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')'); // transform the x,y value with translate
+  // we attach the svg to the html here
+  var svg = d3.select('#content').append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
 
-var yScale = d3.scale.linear()
-  .domain([0, d3.max(dataset, function(data) {
-    return data.y;
-  })])
-  .range([height, 0]);
+  // .append('path') // we did this later but it can be chained here
 
-var xScale = d3.scale.linear()
-  .domain([0, 100])
-  .range([0, width]);
+  // we defined the domain here originally but it could have been above too so I did that to illustrate. Think of why that is and discuss on slack!
+  // x.domain(d3.extent(dates))
+  // y.domain([d3.extent(amounts)]) // should not have been an array
 
-var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient('bottom')
-    .ticks(10)
-    .innerTickSize(10)
-    .outerTickSize(10)
-    .tickPadding(10);
+/*
+* Our definition of path was originally on line 33
+* Since there's confusion about placement, I want you to think about
+* why it doesn't matter if we have this here or move it back to line 33
+*/
 
-svg.append('g')
-  .attr('class', 'x axis')
-  .attr('transform', 'translate(0, '+ (height + 10) + ')') // moved to height + 10 pixels
-  .call(xAxis);
+/***** Start of path definition *****/
 
-  var yAxis = d3.svg.axis()
-  .scale(yScale)
-  .orient('left')
-  .ticks(5)
-  .innerTickSize(10)
-  .outerTickSize(2)
-  .tickPadding(10);
+  // defining path function to draw the line
+  var path = d3.svg.line() // using d3's line layout here
+    .x(function(d) {
+      return x(d.date) // Mistake was we had return d.date
+    })
+    .y(function(d) {
+      return y(d.amount) // Mistake was we had return d.amount
+    })
 
-  svg.append('g')
-    .attr('class', 'y axis')
-    .attr('transform', 'translate(0, '+ 10 + ')') // moved to height + 10 pixels
+/*
+*  If in the future you get intermittent NaN errors in your data,
+*  we can use 2 d3 tools with .defined and !isNan methods below.
+*  It should go before the interpolate after you return datum values.
+*  !isNan() will give us only numbers
+*/
+    // .defined(function(d){ return !isNaN(d.value); })
+    .interpolate('basis')
+
+/***** End of path definition *****/
+
+  // now we append the path to the svg - note the 2 different options
+  svg.append('path') // if you append path above, this should be just svg
+    // .datum(dataSet) // if you append the path above, you HAVE to do this
+    .attr('class', 'line')
+    .attr('d', path(dataSet)) // if you append the path above, you only pass in path function like .attr('d', path)
+
+/*
+*  Think about what happened on lines 90-93.
+*  Discuss on slack.
+*/
+
+  // towards the end of the code we add the axes
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+  svg.append("g")
+    .attr("class", "y axis")
     .call(yAxis);
-
-svg.selectAll('circle')
-  .data(dataset)
-  .enter()
-  .append('circle') // creating circles
-  .attr('class', 'bubble')
-  .attr('cx', function(data) { // determining the center point x value
-    return xScale(data.x);
-  })
-  .attr('cy', function(data) { // determining the center point y value
-    return yScale(data.y);
-  })
-  .attr('r', function(data) { // determining the radius of the circle
-    return data.radius;
-  });
+})
