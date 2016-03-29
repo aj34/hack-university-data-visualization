@@ -32,9 +32,9 @@ d3.svg.line() // d3 has layouts and this is one for line charts
 ---
 
 ##### Requirements
-[ ] Use the included current_candidate_transactions_in endpoint
-[ ] Line chart representation of money (y) over time (x)
-[ ] A function that changes the visualization to a different candidate's data
+* [ ] Use the included current_candidate_transactions_in endpoint
+* [ ] Line chart representation of money (y) over time (x)
+* [ ] A function that changes the visualization to a different candidate's data
 
 Continue working with the code where we are at so far or restart if you wish. Feel free to collaborate on slack, and use github to share your code and work on finishing this visualization.
 
