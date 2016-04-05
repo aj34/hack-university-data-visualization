@@ -1,2 +1,3 @@
-## Completed Project 1 Example
+#### Project 1 Example
 
+![example](./project1ex.png)
