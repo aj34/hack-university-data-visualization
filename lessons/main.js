@@ -11,32 +11,6 @@ var height = 500 - margin.top - margin.bottom;
 var filerId = 13920;
 
 var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + filerId + '/';
-function changeCandidate(){
-
-}
-var somedata;
-function fetchData(url){
-  var fetchedData = new Promise( function(resolve,reject) {
-    $.getJSON(url,function(json){
-      resolve(json);
-    })
-  })
-  return fetchedData;
-}
-
-var fetchedData = new Promise( function(resolve,reject) {
-  $.getJSON(url,function(json){
-    resolve(json);
-  })
-});
-
-fetchedData.then(function(value){
-  somedata = value;
-  console.log(somedata)
-})
-// note that I changed this to d3.json to show there's no difference
-
-
 
 d3.json(url, function(json) {
   var data = json;
@@ -52,42 +26,22 @@ d3.json(url, function(json) {
   function sortByDates(a, b) {
     return a.date - b.date; // dates convert to number so subtraction gives us the sort method
   }
-  somedata = dataSet.sort(sortByDates);
-  // var nested = d3.nest()
-  //     .key( function(d) {return d.date})
-  //     .rollup(function(values) {
-  //       return d3.sum(values,  function(d) {
-  //         return d.amount;
-  //       })
-  //     })
-  //     .entries(dataSet);
-  //
-  //     var nestedArr = nested.map(function (d) {
-  //     return {
-  //       date: parseDate(d.key),
-  //       amount: d.values
-  //     }
-  //   });
-  //   console.log(nestedArr)
 
-  // we did not do this in class but when using d3.extent it's handy for min/max
   var dates = _.map(dataSet, 'date');
-  var amounts = _.map(dataSet, 'amount'); // only necessary if we use extent
+  var amounts = _.map(dataSet, 'amount');
 
   // defining the x and y values
   var x = d3.time.scale() // determined through d3.time.scale function
     .domain(d3.extent(dates)) // using the extent method on dates array
     .range([0, width]);
-  var y = d3.scale.linear() // determined through d3.scale.linear function
-    .domain([0, 70000]) // we tried this in class - it works
-    // .domain([0, d3.max(dataSet, function(d) { // we tried this in class - it works
-      // return d.amount; // is there a difference though? try extent below and see
-    // })])
-    // .domain(d3.extent(amounts)) // we had this in an array in class like [d3.extent...] and it should not have been
+  var y = d3.scale.linear()
+    .domain(d3.extent(amounts))
     .range([height, 0]);
 
+  // sort data here
   dataSet.sort(sortByDates);
-  // we didn't get to this in class but this should be familiar
+
+  // defining axes
   var xAxis = d3.svg.axis().scale(x)
     .orient('bottom').ticks(6);
   var yAxis = d3.svg.axis().scale(y)
@@ -101,50 +55,20 @@ d3.json(url, function(json) {
     .attr("transform",
       "translate(" + margin.left + "," + margin.top + ")");
 
-  // .append('path') // we did this later but it can be chained here
-
-  // we defined the domain here originally but it could have been above too so I did that to illustrate. Think of why that is and discuss on slack!
-  // x.domain(d3.extent(dates))
-  // y.domain([d3.extent(amounts)]) // should not have been an array
-
-/*
-* Our definition of path was originally on line 33
-* Since there's confusion about placement, I want you to think about
-* why it doesn't matter if we have this here or move it back to line 33
-*/
-
-/***** Start of path definition *****/
-
   // defining path function to draw the line
-  var path = d3.svg.line() // using d3's line layout here
+  var path = d3.svg.line()
     .x(function(d) {
-      return x(d.date) // Mistake was we had return d.date
+      return x(d.date)
     })
     .y(function(d) {
-      return y(d.amount) // Mistake was we had return d.amount
+      return y(d.amount)
     })
-
-/*
-*  If in the future you get intermittent NaN errors in your data,
-*  we can use 2 d3 tools with .defined and !isNan methods below.
-*  It should go before the interpolate after you return datum values.
-*  !isNan() will give us only numbers
-*/
-    // .defined(function(d){ return !isNaN(d.value); })
     .interpolate('basis')
 
-/***** End of path definition *****/
-
   // now we append the path to the svg - note the 2 different options
-  svg.append('path') // if you append path above, this should be just svg
-    // .datum(dataSet) // if you append the path above, you HAVE to do this
+  svg.append('path')
     .attr('class', 'line')
-    .attr('d', path(dataSet)) // if you append the path above, you only pass in path function like .attr('d', path)
-
-/*
-*  Think about what happened on lines 90-93.
-*  Discuss on slack.
-*/
+    .attr('d', path(dataSet))
 
   // towards the end of the code we add the axes
   svg.append("g")
