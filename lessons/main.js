@@ -8,36 +8,85 @@ var margin = {
 var width = 800 - margin.left - margin.right;
 var height = 500 - margin.top - margin.bottom;
 
-var filerId = 931;
+var filerId = 13920;
 
 var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + filerId + '/';
+function changeCandidate(){
 
+}
+var somedata;
+function fetchData(url){
+  var fetchedData = new Promise( function(resolve,reject) {
+    $.getJSON(url,function(json){
+      resolve(json);
+    })
+  })
+  return fetchedData;
+}
+
+var fetchedData = new Promise( function(resolve,reject) {
+  $.getJSON(url,function(json){
+    resolve(json);
+  })
+});
+
+fetchedData.then(function(value){
+  somedata = value;
+  console.log(somedata)
+})
 // note that I changed this to d3.json to show there's no difference
+
+
+
 d3.json(url, function(json) {
   var data = json;
   var parseDate = d3.time.format('%Y-%m-%d').parse;
   var dataSet = data.map(function(item) {
     return {
       date: parseDate(item.tran_date),
-      amount: +item.amount
+      amount: item.amount
     }
   })
 
+  // function to help us sort through the dates
+  function sortByDates(a, b) {
+    return a.date - b.date; // dates convert to number so subtraction gives us the sort method
+  }
+  somedata = dataSet.sort(sortByDates);
+  // var nested = d3.nest()
+  //     .key( function(d) {return d.date})
+  //     .rollup(function(values) {
+  //       return d3.sum(values,  function(d) {
+  //         return d.amount;
+  //       })
+  //     })
+  //     .entries(dataSet);
+  //
+  //     var nestedArr = nested.map(function (d) {
+  //     return {
+  //       date: parseDate(d.key),
+  //       amount: d.values
+  //     }
+  //   });
+  //   console.log(nestedArr)
+
   // we did not do this in class but when using d3.extent it's handy for min/max
   var dates = _.map(dataSet, 'date');
-  // var amounts = _.map(dataSet, 'amount'); // only necessary if we use extent
+  var amounts = _.map(dataSet, 'amount'); // only necessary if we use extent
 
   // defining the x and y values
   var x = d3.time.scale() // determined through d3.time.scale function
     .domain(d3.extent(dates)) // using the extent method on dates array
     .range([0, width]);
   var y = d3.scale.linear() // determined through d3.scale.linear function
-    .domain([0, d3.max(dataSet, function(d) { // we tried this in class - it works
-      return d.amount; // is there a difference though? try extent below and see
-    })])
+    .domain([0, 70000]) // we tried this in class - it works
+    // .domain([0, d3.max(dataSet, function(d) { // we tried this in class - it works
+      // return d.amount; // is there a difference though? try extent below and see
+    // })])
     // .domain(d3.extent(amounts)) // we had this in an array in class like [d3.extent...] and it should not have been
     .range([height, 0]);
 
+  dataSet.sort(sortByDates);
   // we didn't get to this in class but this should be familiar
   var xAxis = d3.svg.axis().scale(x)
     .orient('bottom').ticks(6);

@@ -1,46 +1,27 @@
-# Lesson 9 and Project 1
+# Lesson 10
 ---
 
-## Line charts
+## Sunday continuation of Project 1
 
-### Topics covered in class
+### Topics covered in class on Sunday
 
 ##### d3 & js related
 ```js
-// promises
-var promise = new Promise(function(resolve, reject){
-  /* something asynchronous */
-  resolve(/* something from asynchronous code to return */)
 
-  if(/* something bad happened */){
-    reject(/* the bad */)
-  }
-});
+// function to help us sort through the dates
+function sortByDates(a, b) {
+  return a.date - b.date; // dates convert to number so subtraction gives us the sort method
+}
 
-// ways to get data from files or online
-d3.json == $.getJSON
-d3.csv
-
-d3.time.scale()
-d3.extent(/* an array */)
-d3.svg.line() // d3 has layouts and this is one for line charts
-
-.interpolate(/* we used basis */) // there's a lot more to it.. Read more at https://github.com/d3/d3-interpolate
+// grouping data and working with it
+d3.nest() // allows us to group data
+    .key( function(d) {return d./* key */}) // the key you want to group by
+    .sortKeys(d3.ascending) // can sort here as well
+    .rollup(function(values) { // rollup allows us to run function on each "leaf" element
+      return d3.sum(values,  function(d) { // values are the leaf elements here
+        return d./* some value you want to work with */;
+      })
+    })
+    .entries(/* array */); // this applies the nest operator to the array of data
 
 ```
-## Project 1
----
-
-##### Requirements
-* [ ] Use the included current_candidate_transactions_in endpoint
-* [ ] Line chart representation of money (y) over time (x)
-* [ ] A function that changes the visualization to a different candidate's data
-
-Continue working with the code where we are at so far or restart if you wish. Feel free to collaborate on slack, and use github to share your code and work on finishing this visualization.
-
-We have a line visual now but does it make sense?
-
-1. What's the underlying problem here? (*hint* Veronica mentioned this...)
-2. How can we solve that?
-
-You have all the tools required for this. I look forward to seeing how you approach this!
