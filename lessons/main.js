@@ -1,3 +1,4 @@
+// defining the margin - started with 0, adjusted based on axes at end
 var margin = {
   top: 20,
   right: 50,
@@ -5,11 +6,14 @@ var margin = {
   left: 70
 }
 
+// defining width and height
 var width = 1200 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 
+// defining the date formatting function
 var parseDate = d3.time.format('%Y-%m-%d').parse;
 
+// using d3.svg.line layout, and then deciding how to interpret the data from that
 var line = d3.svg.line()
   .x(function(d) {
     return x(d.date);
@@ -19,6 +23,7 @@ var line = d3.svg.line()
   })
   .interpolate('linear');
 
+// basic svg element to be appended
 var svg = d3
   .select('#content')
   .append('svg')
@@ -28,29 +33,37 @@ var svg = d3
   .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
+// defining scales for x and y - both the line and the axes
 var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([height-2, 0]);
+var y = d3.scale.linear().range([height - 2, 0]);
 
+// defining the axes, passing it the scale defined above
 var xAxis = d3.svg.axis().scale(x)
   .orient('bottom').ticks(12);
 var yAxis = d3.svg.axis().scale(y)
   .orient('left').ticks(10);
 
+//
 function fetchData(id) {
+  console.log('returning data for ', id);
   var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + id + '/';
   var fetchedData = new Promise(function(resolve, reject) {
     $.getJSON(url, function(json) {
       resolve(json);
     })
   })
+
   return fetchedData;
 }
 
+// sorting function for time series
 function sortByDates(a, b) {
   return a.date - b.date;
 }
 
+// after promise returns fetched data we are formatting it for dataset
 function formatData(data) {
+  console.log('formatted ', data.filer_id)
   var dataSet = data.map((item) => {
     return {
       date: parseDate(item.tran_date),
@@ -61,20 +74,22 @@ function formatData(data) {
   return dataSet;
 }
 
+// running our dataset through defined functions
 function visualize(data) {
-  console.log('visualizing');
+  // data is the dataset
+  console.log('visualized')
   var dates = _.map(data, 'date');
 
   var amounts = _.map(data, 'amount');
 
-  y.domain(d3.extent(amounts))
+  y.domain(d3.extent(amounts)) // using above arrays to pull min & max
   x.domain(d3.extent(dates))
 
   var updateSvg = d3.select("#content").transition();
 
   updateSvg.select(".line")
     .duration(500)
-    .attr("d", line(data))
+    .attr("d", line(data)) // using line function to visualize dataset
   updateSvg.select(".x.axis")
     .duration(500)
     .call(xAxis);
@@ -84,18 +99,27 @@ function visualize(data) {
 
 }
 
-$('select').on('change', (e, i, v) => {
+$('.point').on('click', (arguments) => {
+
+  })
+  // using jquery to attach an on change event listener which changes the data
+$('#candidates').on('change', (event, index, value) => {
+
   var filerId = $('select option:selected').val();
-  fetchData(filerId)
+
+  return fetchData(filerId)
     .then(value => {
+      // value = json
       return formatData(value)
     })
     .then(value => {
+      //  value = formatted data
       return visualize(value)
     })
 });
 
 function initialize(id) {
+  console.log('initialized')
   let url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + id + '/';
   d3.json(url, (json) => {
     let dataSet = formatData(json);
@@ -110,8 +134,25 @@ function initialize(id) {
     svg.append("g")
       .attr("class", "y axis")
       .call(yAxis);
+
     visualize(dataSet);
   })
 }
 
 initialize(931);
+
+var arr = [{
+  amount: 1
+}, {
+  amount: 2
+}, {
+  amount: 5
+}, {
+  amount: 10
+}];
+
+function addAmounts(a, b) {
+  var num = a + b;
+  return num;
+}
+var amounts = arr.map(d => d.amount).reduce(addAmounts)
