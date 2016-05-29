@@ -46,7 +46,7 @@ var yAxis = d3.svg.axis()
 //
 function fetchData(id) {
   console.log('returning data for ', id);
-  var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_in/' + id + '/';
+  var url = 'http://54.213.83.132/hackoregon/http/current_candidate_transactions_out/' + id + '/';
   var fetchedData = new Promise(function (resolve, reject) {
     $.getJSON(url, function (json) {
       resolve(json);
@@ -70,13 +70,6 @@ function formatData(data) {
   dataSet.sort(sortByDates);
   return dataSet;
 }
-// var groupByWeek = function (data) {
-//   var sortedData = data.sort(sortByData);
-//   sortedData.forEach(Function(item) {
-//     // if in week
-//   })
-// }
-function checkForWeek(week, date) {}
 
 function groupByWeeks(data) {
   var minDate = data[0].date;
@@ -103,7 +96,6 @@ function groupByWeeks(data) {
 // running our dataset through defined functions
 function visualize(data) {
   // data is the dataset
-  debugger;
   console.log('visualized')
   var dates = _.map(data, 'date');
   var amounts = _.map(data, 'amount');
@@ -160,6 +152,7 @@ function initialize(id) {
   })
 }
 initialize(931);
+
 var arr = [{
   amount: 1
 }, {
