@@ -121,12 +121,10 @@ function visualize(data) {
     .duration(500)
     .call(yAxis);
 }
-$('.point')
-  .on('click', (arguments) => {})
-  // using jquery to attach an on change event listener which changes the data
-$('#candidates')
-  .on('change', (event, index, value) => {
-    var filerId = $('select option:selected')
+$('#submitFiler')
+  .on('click', (arguments) => {
+    var $filerId = $('#filerId')
+    var filerId = $filerId
       .val();
     return fetchData(filerId)
       .then(value => {
@@ -138,22 +136,7 @@ $('#candidates')
       })
       .then(value => {
         //  value = formatted data
-        return visualize(value)
-      })
-  });
-
-  $('#submitFiler').on('click', (arguments) => {
-    var filerId = $('#filerId').val();
-    return fetchData(filerId)
-      .then(value => {
-        // value = json
-        return formatData(value)
-      })
-      .then(value => {
-        return groupByWeeks(value)
-      })
-      .then(value => {
-        //  value = formatted data
+        $filerId.val('');
         return visualize(value)
       })
   })
@@ -176,8 +159,6 @@ function initialize(id) {
     visualize(dataSet);
   })
 }
-
-
 initialize(931);
 var arr = [{
   amount: 1
