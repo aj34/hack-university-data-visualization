@@ -12,7 +12,15 @@
 
 <body>
   <div id="content"></div>
-  <button onclick="changeCandidate()">Change Candidate</button>
+  <select onChange="changeOption(this.options[this.selectedIndex].value, false)">
+    <option value="state">Oregon State Totals</option>
+    <option value="931">Kate Brown</option>
+    <option value="5591">Ted Wheeler</option>
+    <option value="13920">John Kitzhaber</option>
+    <option value="15089">Charlie Hayles</option>
+    <option value="17539">Oregonians for High School Success</option>
+    <option value="1524">Future PAC, House Builders</option>
+  </select>
   <script src="main.js"></script>
 </body>
 
