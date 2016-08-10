@@ -45,7 +45,7 @@ function changeOption(filerId, firstTime) {
     var dataSet = data.map(function (item) {
       return {
         date: d3.time.month(parseDate(item.tran_date)),
-        amount: (filerId === 'state') ? item.total_in : item.amount
+        amount: (filerId === 'state') ? item.total_out : item.amount
       }
     })
 
